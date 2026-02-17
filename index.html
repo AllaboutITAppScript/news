@@ -69,6 +69,7 @@
                 gap: 20px;
             }
             
+            /* Center bottom nav on PC */
             .bottom-nav {
                 max-width: 400px;
                 left: 50%;
@@ -91,6 +92,13 @@
             }
             
             .hero-swiper {
+                max-width: 1200px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            /* Pagination on PC */
+            .pagination-container {
                 max-width: 1200px;
                 margin-left: auto;
                 margin-right: auto;
@@ -362,6 +370,37 @@
         
         .btn-share:active {
             opacity: 0.8;
+        }
+        
+        .btn-pagination {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-pagination:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-pagination.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-pagination:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
         
         .modal {
@@ -829,6 +868,28 @@
         .sync-indicator i {
             font-size: 8px;
         }
+        
+        /* Pagination styles */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-right: 16px;
+        }
+        
+        /* Remove pending badge from home tab */
+        .filter-btn[data-filter="pending"] {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -891,7 +952,7 @@
                 </div>
             </div>
 
-            <!-- Hero Slider (แสดงเฉพาะประกาศด่วน) -->
+            <!-- Hero Slider (แสดงเฉพาะประกาศด่วน เสมอ) -->
             <div class="swiper hero-swiper mb-4">
                 <div class="swiper-wrapper" id="hero-slider-wrapper"></div>
                 <div class="swiper-pagination"></div>
@@ -910,17 +971,27 @@
                 <input type="text" id="search-input" placeholder="ค้นหาข่าวสาร กิจกรรม..." autocomplete="off">
             </div>
 
-            <!-- Filter -->
+            <!-- Filter (ไม่มีปุ่มรออนุมัติ) -->
             <div class="filter-container">
                 <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
                 <button class="filter-btn" data-filter="news">📰 ข่าวสาร</button>
                 <button class="filter-btn" data-filter="event">🎉 กิจกรรม</button>
                 <button class="filter-btn" data-filter="urgent">⚠️ ประกาศด่วน</button>
-                <button class="filter-btn" data-filter="pending">⏳ รออนุมัติ</button>
             </div>
 
             <!-- Posts List - Grid for PC -->
             <div id="posts-list" class="posts-grid space-y-3 lg:space-y-0"></div>
+            
+            <!-- Pagination -->
+            <div id="pagination-container" class="pagination-container hidden">
+                <button class="btn-pagination" id="prev-page" onclick="changePage('prev')" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span id="page-info" class="pagination-info"></span>
+                <button class="btn-pagination" id="next-page" onclick="changePage('next')" disabled>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Tab: My Posts -->
@@ -932,6 +1003,17 @@
                 </button>
             </div>
             <div id="my-posts-list" class="my-posts-grid space-y-3 lg:space-y-0"></div>
+            
+            <!-- My Posts Pagination -->
+            <div id="my-pagination-container" class="pagination-container hidden">
+                <button class="btn-pagination" id="my-prev-page" onclick="changeMyPage('prev')" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span id="my-page-info" class="pagination-info"></span>
+                <button class="btn-pagination" id="my-next-page" onclick="changeMyPage('next')" disabled>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Tab: Admin -->
@@ -991,6 +1073,17 @@
                     <i class="fas fa-plus mr-2"></i>สร้างโพสต์ใหม่
                 </button>
                 <div id="admin-posts-list" class="admin-posts-grid space-y-2"></div>
+                
+                <!-- Admin Posts Pagination -->
+                <div id="admin-posts-pagination" class="pagination-container hidden">
+                    <button class="btn-pagination" id="admin-posts-prev" onclick="changeAdminPostsPage('prev')" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span id="admin-posts-info" class="pagination-info"></span>
+                    <button class="btn-pagination" id="admin-posts-next" onclick="changeAdminPostsPage('next')" disabled>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Admin: Pending Posts (ที่เดียวที่มีปุ่มอนุมัติ/ปฏิเสธ) -->
@@ -1169,7 +1262,7 @@
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwSz6Y_fpvB0qN52eS6QD2RFJD-bJA369B6b86W1ZGVCOrbPXGGbpBIS3hDO8h6awKzkw/exec',
             LIFF_ID: '2008904120-T7I0VPZf',
-            PAGE_SIZE: 20,
+            PAGE_SIZE: 9, // 3x3 grid
             DRIVE_FOLDER_ID: '18V_3SzGvCIfwbRqIpIEwRSVdA88T8mcE',
             POLLING_INTERVAL: 5000 // 5 seconds for real-time updates
         };
@@ -1186,12 +1279,18 @@
             isAdmin: false,
             isEditor: false,
             currentPage: 1,
+            myPostsPage: 1,
+            adminPostsPage: 1,
+            totalPages: 1,
+            myPostsTotalPages: 1,
+            adminPostsTotalPages: 1,
             currentPost: null,
             settings: {
                 requireApproval: false
             },
             lastUpdate: Date.now(),
-            syncTimeout: null
+            syncTimeout: null,
+            urgentPosts: [] // เก็บประกาศด่วนแยก
         };
 
         // ========== DOM Elements ==========
@@ -1280,9 +1379,8 @@
             if (pollingInterval) clearInterval(pollingInterval);
             
             pollingInterval = setInterval(async () => {
-                if (document.hidden) return; // ไม่โหลดเมื่อแท็บไม่ได้ใช้งาน
+                if (document.hidden) return;
                 
-                // ตรวจสอบว่ามีการเปลี่ยนแปลงหรือไม่ (ทำงานเบื้องหลัง)
                 await checkForUpdates();
             }, CONFIG.POLLING_INTERVAL);
         }
@@ -1296,19 +1394,16 @@
                 if (result.success && result.data.hasUpdates) {
                     console.log('New updates detected, refreshing...');
                     
-                    // แสดง indicator เบื้องหลัง
                     showSyncIndicator();
                     
-                    // โหลดข้อมูลทั้งหมดใหม่ (ทำงานเบื้องหลัง)
                     await Promise.all([
-                        loadPosts(true), // silent update
+                        loadPosts(true),
                         loadMyPosts(),
                         loadPendingPosts(),
                         state.isAdmin ? loadUsers() : Promise.resolve(),
                         state.isAdmin ? loadAdminStats() : Promise.resolve()
                     ]);
                     
-                    // แสดงการแจ้งเตือนเล็กน้อย
                     showRealtimeIndicator();
                     
                     state.lastUpdate = Date.now();
@@ -1335,7 +1430,7 @@
             }, 2000);
         }
 
-        // ========== IMAGE UPLOAD (No Loading) ==========
+        // ========== IMAGE UPLOAD ==========
         async function uploadImageToDrive(file) {
             try {
                 const base64 = await new Promise((resolve, reject) => {
@@ -1413,7 +1508,6 @@
                     
                     updateUI();
                     
-                    // เริ่ม real-time updates
                     startRealtimeUpdates();
                 } else {
                     showToast(result.message, 'error');
@@ -1480,28 +1574,68 @@
             
             if (result.success) {
                 state.posts = result.data.posts || [];
+                state.totalPages = Math.ceil((result.data.total || 0) / CONFIG.PAGE_SIZE) || 1;
                 
+                // อัปเดตสถิติ
                 document.getElementById('stat-news').textContent = result.data.stats?.news || 0;
                 document.getElementById('stat-events').textContent = result.data.stats?.events || 0;
                 document.getElementById('stat-urgent').textContent = result.data.stats?.urgent || 0;
                 
-                renderHeroSlider();
+                // โหลดประกาศด่วนแยกสำหรับ slider
+                await loadUrgentPosts();
+                
                 renderPosts();
+                renderPagination();
             }
         }
 
-        // ========== RENDER HERO SLIDER (เฉพาะประกาศด่วน) ==========
+        // โหลดประกาศด่วนแยกต่างหาก
+        async function loadUrgentPosts() {
+            const result = await callGAS('posts', {
+                filter: 'urgent',
+                pageSize: 10,
+                includePending: false
+            });
+            
+            if (result.success) {
+                state.urgentPosts = result.data.posts?.filter(p => p.approvalStatus === 'approved') || [];
+                renderHeroSlider();
+            }
+        }
+
+        // ========== RENDER HERO SLIDER (เฉพาะประกาศด่วน เสมอ) ==========
         function renderHeroSlider() {
             const wrapper = document.getElementById('hero-slider-wrapper');
             if (!wrapper) return;
             
-            // กรองเอาเฉพาะโพสต์ประเภท 'urgent' ที่เผยแพร่แล้ว (approvalStatus = 'approved')
-            const urgentPosts = state.posts
-                .filter(post => post.type === 'urgent' && post.approvalStatus === 'approved')
-                .slice(0, 5);
+            const urgentPosts = state.urgentPosts.slice(0, 5);
             
             if (urgentPosts.length === 0) {
-                wrapper.innerHTML = '';
+                // แสดง placeholder ถ้าไม่มีประกาศด่วน
+                wrapper.innerHTML = `
+                    <div class="swiper-slide">
+                        <img src="https://via.placeholder.com/400/2a2e36/06c755?text=ไม่มีประกาศด่วน" 
+                             class="w-full h-full object-cover">
+                        <div class="slide-content">
+                            <h3 class="font-bold text-lg">ไม่มีประกาศด่วนในขณะนี้</h3>
+                        </div>
+                    </div>
+                `;
+                
+                // Initialize Swiper
+                const swiperEl = document.querySelector('.hero-swiper');
+                if (swiperEl.swiper) {
+                    swiperEl.swiper.destroy(true, true);
+                }
+                
+                new Swiper('.hero-swiper', {
+                    autoplay: false,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    loop: false,
+                });
                 return;
             }
 
@@ -1614,6 +1748,137 @@
             }).join('');
         }
 
+        // ========== PAGINATION ==========
+        function renderPagination() {
+            const container = document.getElementById('pagination-container');
+            const pageInfo = document.getElementById('page-info');
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            
+            if (state.totalPages <= 1) {
+                container.classList.add('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            pageInfo.textContent = `หน้า ${state.currentPage} จาก ${state.totalPages}`;
+            
+            prevBtn.disabled = state.currentPage <= 1;
+            nextBtn.disabled = state.currentPage >= state.totalPages;
+        }
+
+        function changePage(direction) {
+            if (direction === 'prev' && state.currentPage > 1) {
+                state.currentPage--;
+            } else if (direction === 'next' && state.currentPage < state.totalPages) {
+                state.currentPage++;
+            } else {
+                return;
+            }
+            
+            loadPosts();
+        }
+
+        // ========== MY POSTS PAGINATION ==========
+        async function loadMyPosts() {
+            const result = await callGAS('user/posts', {
+                page: state.myPostsPage,
+                pageSize: CONFIG.PAGE_SIZE
+            });
+            
+            if (result.success) {
+                state.myPosts = result.data.posts || [];
+                state.myPostsTotalPages = Math.ceil((result.data.total || 0) / CONFIG.PAGE_SIZE) || 1;
+                renderMyPosts();
+                renderMyPostsPagination();
+            }
+        }
+
+        function renderMyPostsPagination() {
+            const container = document.getElementById('my-pagination-container');
+            const pageInfo = document.getElementById('my-page-info');
+            const prevBtn = document.getElementById('my-prev-page');
+            const nextBtn = document.getElementById('my-next-page');
+            
+            if (state.myPostsTotalPages <= 1) {
+                container.classList.add('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            pageInfo.textContent = `หน้า ${state.myPostsPage} จาก ${state.myPostsTotalPages}`;
+            
+            prevBtn.disabled = state.myPostsPage <= 1;
+            nextBtn.disabled = state.myPostsPage >= state.myPostsTotalPages;
+        }
+
+        function changeMyPage(direction) {
+            if (direction === 'prev' && state.myPostsPage > 1) {
+                state.myPostsPage--;
+            } else if (direction === 'next' && state.myPostsPage < state.myPostsTotalPages) {
+                state.myPostsPage++;
+            } else {
+                return;
+            }
+            
+            loadMyPosts();
+        }
+
+        function renderMyPosts() {
+            const list = document.getElementById('my-posts-list');
+            if (state.myPosts.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state col-span-3">
+                        <i class="fas fa-pen-fancy text-4xl text-gray-500 mb-3"></i>
+                        <p class="text-gray-400">ยังไม่มีโพสต์</p>
+                        ${state.isEditor ? `
+                            <button class="btn-primary mt-4" onclick="showCreatePostModal()">
+                                <i class="fas fa-plus mr-2"></i>สร้างโพสต์แรก
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = state.myPosts.map(post => {
+                const statusClass = post.approvalStatus === 'approved' ? 'text-[#06c755]' : 
+                                   post.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500';
+                const statusText = post.approvalStatus === 'approved' ? 'เผยแพร่' : 
+                                  post.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
+                
+                const typeIcon = {
+                    'news': '📰',
+                    'event': '🎉',
+                    'urgent': '⚠️'
+                }[post.type] || '📄';
+                
+                return `
+                    <div class="news-card" onclick="showPostDetail('${post.postId}')">
+                        ${post.imageUrl ? `
+                            <img src="${post.imageUrl}" 
+                                 class="news-image" 
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/400/2a2e36/ffffff?text=IMAGE'">
+                        ` : ''}
+                        <div class="news-content">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="badge badge-news">${typeIcon}</span>
+                                    ${post.approvalStatus === 'pending' ? 
+                                        '<span class="badge badge-pending ml-2">⏳ รออนุมัติ</span>' : ''}
+                                </div>
+                                <span class="text-xs ${statusClass}">${statusText}</span>
+                            </div>
+                            <h3 class="font-semibold">${post.title}</h3>
+                            <p class="text-sm text-gray-400 mt-1 line-clamp-2">${post.content}</p>
+                            <p class="text-xs text-gray-500 mt-2">${formatDate(post.createdAt)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         // ========== PENDING POSTS ==========
         async function loadPendingPosts() {
             if (!state.isAdmin) return;
@@ -1680,7 +1945,7 @@
             }).join('');
         }
 
-        // ========== APPROVE/REJECT POST (เฉพาะใน Tab รออนุมัติ) ==========
+        // ========== APPROVE/REJECT POST ==========
         async function approvePost(postId) {
             if (!state.isAdmin) return;
             
@@ -1714,20 +1979,16 @@
                     showConfirmButton: false
                 });
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
                 
-                // โหลดข้อมูลใหม่ทันที
                 await Promise.all([
                     loadPosts(true),
                     loadPendingPosts(),
+                    loadUrgentPosts(),
                     loadAdminStats()
                 ]);
                 
-                // อัปเดต lastUpdate
                 state.lastUpdate = Date.now();
-                
-                // แสดง indicator อัปเดต
                 showRealtimeIndicator();
             }
         }
@@ -1765,86 +2026,18 @@
                     showConfirmButton: false
                 });
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
                 
-                // โหลดข้อมูลใหม่ทันที
                 await Promise.all([
                     loadPosts(true),
                     loadPendingPosts(),
+                    loadUrgentPosts(),
                     loadAdminStats()
                 ]);
                 
-                // อัปเดต lastUpdate
                 state.lastUpdate = Date.now();
-                
-                // แสดง indicator อัปเดต
                 showRealtimeIndicator();
             }
-        }
-
-        // ========== MY POSTS ==========
-        async function loadMyPosts() {
-            const result = await callGAS('user/posts');
-            if (result.success) {
-                state.myPosts = result.data || [];
-                renderMyPosts();
-            }
-        }
-
-        function renderMyPosts() {
-            const list = document.getElementById('my-posts-list');
-            if (state.myPosts.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state col-span-3">
-                        <i class="fas fa-pen-fancy text-4xl text-gray-500 mb-3"></i>
-                        <p class="text-gray-400">ยังไม่มีโพสต์</p>
-                        ${state.isEditor ? `
-                            <button class="btn-primary mt-4" onclick="showCreatePostModal()">
-                                <i class="fas fa-plus mr-2"></i>สร้างโพสต์แรก
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                return;
-            }
-
-            list.innerHTML = state.myPosts.map(post => {
-                const statusClass = post.approvalStatus === 'approved' ? 'text-[#06c755]' : 
-                                   post.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500';
-                const statusText = post.approvalStatus === 'approved' ? 'เผยแพร่' : 
-                                  post.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
-                
-                const typeIcon = {
-                    'news': '📰',
-                    'event': '🎉',
-                    'urgent': '⚠️'
-                }[post.type] || '📄';
-                
-                return `
-                    <div class="news-card" onclick="showPostDetail('${post.postId}')">
-                        ${post.imageUrl ? `
-                            <img src="${post.imageUrl}" 
-                                 class="news-image" 
-                                 loading="lazy"
-                                 onerror="this.src='https://via.placeholder.com/400/2a2e36/ffffff?text=IMAGE'">
-                        ` : ''}
-                        <div class="news-content">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <span class="badge badge-news">${typeIcon}</span>
-                                    ${post.approvalStatus === 'pending' ? 
-                                        '<span class="badge badge-pending ml-2">⏳ รออนุมัติ</span>' : ''}
-                                </div>
-                                <span class="text-xs ${statusClass}">${statusText}</span>
-                            </div>
-                            <h3 class="font-semibold">${post.title}</h3>
-                            <p class="text-sm text-gray-400 mt-1 line-clamp-2">${post.content}</p>
-                            <p class="text-xs text-gray-500 mt-2">${formatDate(post.createdAt)}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
 
         // ========== SHARE ==========
@@ -2103,7 +2296,7 @@
             const fileInput = document.getElementById('post-image-file');
             
             if (fileInput.files && fileInput.files[0]) {
-                showSyncIndicator(); // แสดง indicator ขณะอัปโหลด
+                showSyncIndicator();
                 const uploadedUrl = await uploadImageToDrive(fileInput.files[0]);
                 if (uploadedUrl) {
                     imageUrl = uploadedUrl;
@@ -2139,21 +2332,17 @@
                 
                 closeCreateModal();
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
                 
-                // โหลดข้อมูลใหม่ทันที (realtime)
                 await Promise.all([
                     loadPosts(true),
                     loadMyPosts(),
                     loadPendingPosts(),
+                    loadUrgentPosts(),
                     state.isAdmin ? loadAdminStats() : Promise.resolve()
                 ]);
                 
-                // อัปเดต lastUpdate
                 state.lastUpdate = Date.now();
-                
-                // แสดง indicator อัปเดต
                 showRealtimeIndicator();
             }
         }
@@ -2229,21 +2418,17 @@
                 
                 closeModal();
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
                 
-                // โหลดข้อมูลใหม่ทันที
                 await Promise.all([
                     loadPosts(true),
                     loadMyPosts(),
                     loadPendingPosts(),
+                    loadUrgentPosts(),
                     state.isAdmin ? loadAdminStats() : Promise.resolve()
                 ]);
                 
-                // อัปเดต lastUpdate
                 state.lastUpdate = Date.now();
-                
-                // แสดง indicator อัปเดต
                 showRealtimeIndicator();
             }
         }
@@ -2356,16 +2541,13 @@
                 
                 closeRoleModal();
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
                 
-                // อัปเดต state ทันที
                 const userIndex = state.users.findIndex(u => u.lineUserId === userId);
                 if (userIndex !== -1) {
                     state.users[userIndex].role = role;
                 }
                 
-                // ถ้าเป็นผู้ใช้ปัจจุบัน ให้อัปเดตด้วย
                 if (state.user?.lineUserId === userId) {
                     state.user.role = role;
                     state.isAdmin = role === 'admin';
@@ -2376,7 +2558,6 @@
                 renderUsers();
                 await loadUsers();
                 
-                // อัปเดต lastUpdate
                 state.lastUpdate = Date.now();
             }
         }
@@ -2394,31 +2575,77 @@
                 document.getElementById('admin-pending').textContent = stats.pending || 0;
             }
 
-            const posts = await callGAS('admin/posts', { pageSize: 10 });
+            const posts = await callGAS('admin/posts', { 
+                page: state.adminPostsPage,
+                pageSize: CONFIG.PAGE_SIZE 
+            });
+            
             if (posts.success) {
-                const list = document.getElementById('admin-posts-list');
-                list.innerHTML = posts.data.map(p => {
-                    const typeIcon = {
-                        'news': '📰',
-                        'event': '🎉',
-                        'urgent': '⚠️'
-                    }[p.type] || '📄';
-                    
-                    const statusText = p.approvalStatus === 'approved' ? 'เผยแพร่' : 
-                                      p.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
-                    
-                    return `
-                        <div class="flex justify-between items-center p-3 bg-[#111317] rounded-lg cursor-pointer" onclick="showPostDetail('${p.postId}')">
-                            <div class="flex-1">
-                                <p class="font-semibold">${p.title}</p>
-                                <p class="text-xs text-gray-400">${formatDateShort(p.createdAt)}</p>
-                            </div>
-                            <span class="badge badge-${p.type} text-xs mr-2">${typeIcon}</span>
-                            <span class="text-xs ${p.approvalStatus === 'approved' ? 'text-[#06c755]' : p.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500'}">${statusText}</span>
-                        </div>
-                    `;
-                }).join('');
+                state.adminPosts = posts.data.posts || [];
+                state.adminPostsTotalPages = Math.ceil((posts.data.total || 0) / CONFIG.PAGE_SIZE) || 1;
+                renderAdminPosts();
+                renderAdminPostsPagination();
             }
+        }
+
+        function renderAdminPosts() {
+            const list = document.getElementById('admin-posts-list');
+            if (!state.adminPosts || state.adminPosts.length === 0) {
+                list.innerHTML = '<p class="text-gray-400 text-center py-8">ไม่มีโพสต์</p>';
+                return;
+            }
+
+            list.innerHTML = state.adminPosts.map(p => {
+                const typeIcon = {
+                    'news': '📰',
+                    'event': '🎉',
+                    'urgent': '⚠️'
+                }[p.type] || '📄';
+                
+                const statusText = p.approvalStatus === 'approved' ? 'เผยแพร่' : 
+                                  p.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
+                
+                return `
+                    <div class="flex justify-between items-center p-3 bg-[#111317] rounded-lg cursor-pointer" onclick="showPostDetail('${p.postId}')">
+                        <div class="flex-1">
+                            <p class="font-semibold">${p.title}</p>
+                            <p class="text-xs text-gray-400">${formatDateShort(p.createdAt)}</p>
+                        </div>
+                        <span class="badge badge-${p.type} text-xs mr-2">${typeIcon}</span>
+                        <span class="text-xs ${p.approvalStatus === 'approved' ? 'text-[#06c755]' : p.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500'}">${statusText}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAdminPostsPagination() {
+            const container = document.getElementById('admin-posts-pagination');
+            const pageInfo = document.getElementById('admin-posts-info');
+            const prevBtn = document.getElementById('admin-posts-prev');
+            const nextBtn = document.getElementById('admin-posts-next');
+            
+            if (state.adminPostsTotalPages <= 1) {
+                container.classList.add('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            pageInfo.textContent = `หน้า ${state.adminPostsPage} จาก ${state.adminPostsTotalPages}`;
+            
+            prevBtn.disabled = state.adminPostsPage <= 1;
+            nextBtn.disabled = state.adminPostsPage >= state.adminPostsTotalPages;
+        }
+
+        function changeAdminPostsPage(direction) {
+            if (direction === 'prev' && state.adminPostsPage > 1) {
+                state.adminPostsPage--;
+            } else if (direction === 'next' && state.adminPostsPage < state.adminPostsTotalPages) {
+                state.adminPostsPage++;
+            } else {
+                return;
+            }
+            
+            loadAdminStats();
         }
 
         // ========== SETTINGS ==========
@@ -2450,7 +2677,6 @@
                 Object.assign(state.settings, data);
                 state.lastUpdate = Date.now();
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
             }
         }
@@ -2498,7 +2724,6 @@
                 updateUI();
                 state.lastUpdate = Date.now();
                 
-                // แสดง indicator เบื้องหลัง
                 showSyncIndicator();
             }
         }
@@ -2535,12 +2760,15 @@
                 document.getElementById(`tab-${target}`).classList.add('active');
                 
                 if (target === 'home') {
+                    state.currentPage = 1;
                     loadPosts();
                 }
                 if (target === 'my') {
+                    state.myPostsPage = 1;
                     loadMyPosts();
                 }
                 if (target === 'admin' && state.isAdmin) {
+                    state.adminPostsPage = 1;
                     loadAdminStats();
                     loadUsers();
                     loadPendingPosts();
@@ -2561,6 +2789,10 @@
                 
                 if (target === 'pending') {
                     loadPendingPosts();
+                }
+                if (target === 'posts') {
+                    state.adminPostsPage = 1;
+                    loadAdminStats();
                 }
             });
         });
@@ -2595,6 +2827,7 @@
         document.getElementById('refresh-admin')?.addEventListener('click', () => {
             if (state.isAdmin) {
                 showSyncIndicator();
+                state.adminPostsPage = 1;
                 loadAdminStats();
                 loadUsers();
                 loadPendingPosts();
