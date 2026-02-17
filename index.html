@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>INSIDER · LINE ข่าวสาร</title>
+    <title>LINE ข่าวสาร · กิจกรรม</title>
     <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/653/653021.png">
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,7 +11,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- LINE LIFF -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js" async></script>
@@ -27,6 +27,7 @@
     
     <style>
         * {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -35,38 +36,17 @@
         :root {
             --primary: #06c755;
             --primary-dark: #05b34a;
-            --primary-light: rgba(6,199,85,0.1);
-            --bg: #ffffff;
-            --bg-card: #f8f9fa;
-            --border: #e9ecef;
-            --text: #212529;
-            --text-secondary: #6c757d;
-            --text-muted: #adb5bd;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --success: #28a745;
-            --info: #17a2b8;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --bg: #0a0a0f;
+            --bg-card: #1a1d24;
+            --border: #2a2e36;
+            --text: #ffffff;
+            --text-secondary: #9ca3af;
         }
         
         body {
-            font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             padding-bottom: 70px;
-        }
-        
-        /* Modern Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.02em;
         }
         
         .bottom-nav {
@@ -74,14 +54,14 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(10px);
+            background: var(--bg-card);
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 12px 0 8px;
+            padding: 8px 0;
             z-index: 50;
-            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            background: rgba(26, 29, 36, 0.95);
         }
         
         .nav-item {
@@ -92,9 +72,8 @@
             gap: 4px;
             color: var(--text-secondary);
             font-size: 12px;
-            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: color 0.2s;
             position: relative;
         }
         
@@ -104,19 +83,12 @@
         
         .nav-item i {
             font-size: 20px;
-            margin-bottom: 2px;
-        }
-        
-        .nav-item span {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
         }
         
         .tab-content {
             display: none;
             padding: 16px;
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.3s ease;
         }
         
         .tab-content.active {
@@ -124,31 +96,21 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0.5; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Modern Swiper */
         .swiper {
             width: 100%;
-            height: 260px;
-            margin-bottom: 24px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
+            height: 220px;
+            margin-bottom: 20px;
+            border-radius: 20px;
         }
         
         .swiper-slide {
-            border-radius: var(--radius-lg);
+            border-radius: 20px;
             overflow: hidden;
             position: relative;
-        }
-        
-        .swiper-slide::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.8));
-            pointer-events: none;
         }
         
         .slide-content {
@@ -156,466 +118,191 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 24px 20px;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
-            z-index: 2;
         }
         
-        .slide-category {
-            display: inline-block;
-            padding: 4px 12px;
-            background: var(--primary);
-            color: white;
+        .slide-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: 700;
-            border-radius: 30px;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            box-shadow: var(--shadow-sm);
+            font-weight: 500;
+            z-index: 10;
         }
         
-        .slide-title {
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 1.3;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .slide-meta {
-            font-size: 12px;
-            opacity: 0.8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .slide-badge.urgent { background: rgba(239,68,68,0.9); color: white; }
+        .slide-badge.event { background: rgba(245,158,11,0.9); color: white; }
+        .slide-badge.news { background: rgba(6,199,85,0.9); color: white; }
         
         .swiper-pagination-bullet {
             background: white;
             opacity: 0.5;
-            width: 8px;
-            height: 8px;
-            transition: all 0.2s;
         }
         
         .swiper-pagination-bullet-active {
-            background: var(--primary);
+            background: var(--primary) !important;
             opacity: 1;
-            width: 20px;
-            border-radius: 10px;
         }
         
-        /* Modern Profile Header */
-        .profile-header {
-            background: linear-gradient(135deg, var(--primary-light), transparent);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .profile-header:active {
-            transform: scale(0.99);
-            background: var(--bg-card);
-        }
-        
-        .profile-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            object-fit: cover;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .profile-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        
-        .profile-email {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        
-        .profile-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: var(--primary-light);
-            color: var(--primary);
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 30px;
-            border: 1px solid rgba(6,199,85,0.2);
-        }
-        
-        /* Modern Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 16px 8px;
-            text-align: center;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text);
-            line-height: 1.2;
-        }
-        
-        .stat-icon {
-            font-size: 20px;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        
-        /* Modern Search */
-        .search-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 16px 16px 16px 48px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            color: var(--text);
-            font-size: 15px;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(6,199,85,0.1);
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
-        
-        /* Modern Filter Chips */
-        .filter-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-            scrollbar-width: none;
-        }
-        
-        .filter-container::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .filter-chip {
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            white-space: nowrap;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .filter-chip.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 10px rgba(6,199,85,0.3);
-        }
-        
-        .filter-chip i {
-            margin-right: 6px;
-        }
-        
-        /* Modern News Card */
         .news-card {
-            background: white;
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
+            border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, border-color 0.2s;
         }
         
-        .news-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+        .news-card:active {
+            transform: scale(0.98);
             border-color: var(--primary);
-        }
-        
-        .news-image-wrapper {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
         }
         
         .news-image {
             width: 100%;
-            height: 100%;
+            height: 200px;
             object-fit: cover;
-            transition: transform 0.5s;
+            background: #2a2e36;
+            transition: transform 0.3s;
         }
         
         .news-card:hover .news-image {
             transform: scale(1.05);
         }
         
-        .news-category {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            padding: 6px 14px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 50px;
-            letter-spacing: 0.5px;
-            z-index: 2;
-        }
-        
-        .news-category.urgent { background: rgba(220,53,69,0.9); }
-        .news-category.event { background: rgba(255,193,7,0.9); color: #000; }
-        .news-category.news { background: rgba(6,199,85,0.9); }
-        
-        .share-button {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(5px);
-            color: var(--text);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .share-button:active {
-            transform: scale(0.9);
-            background: white;
-        }
-        
-        .share-button i {
-            font-size: 18px;
-            color: #00B900;
-        }
-        
         .news-content {
-            padding: 20px;
+            padding: 16px;
         }
         
-        .news-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .news-excerpt {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .news-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            padding-top: 12px;
-        }
-        
-        .news-author {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .news-author i {
-            color: var(--primary);
-        }
-        
-        .news-stats {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .news-stats span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        /* Status Badges */
-        .status-badge {
-            display: inline-block;
+        .badge {
             padding: 4px 10px;
-            border-radius: 50px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            display: inline-block;
         }
         
-        .status-pending {
-            background: rgba(255,193,7,0.15);
-            color: #b86b00;
-            border: 1px solid rgba(255,193,7,0.3);
-        }
-        
-        .status-approved {
+        .badge-news {
             background: rgba(6,199,85,0.15);
-            color: var(--primary-dark);
+            color: var(--primary);
             border: 1px solid rgba(6,199,85,0.3);
         }
         
-        .status-rejected {
-            background: rgba(220,53,69,0.15);
-            color: var(--danger);
-            border: 1px solid rgba(220,53,69,0.3);
+        .badge-event {
+            background: rgba(245,158,11,0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
         }
         
-        /* Modern Buttons */
+        .badge-urgent {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+        
+        .badge-pending {
+            background: rgba(255,193,7,0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255,193,7,0.3);
+        }
+        
         .btn-primary {
             background: var(--primary);
             color: white;
-            padding: 14px;
-            border-radius: 50px;
+            padding: 12px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 15px;
             border: none;
             width: 100%;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(6,199,85,0.3);
+            transition: opacity 0.2s;
         }
         
         .btn-primary:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-            box-shadow: 0 2px 5px rgba(6,199,85,0.3);
+            opacity: 0.8;
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
         .btn-outline {
             background: transparent;
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 14px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 15px;
+            padding: 12px;
+            border-radius: 12px;
             width: 100%;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
         
         .btn-outline:active {
-            background: var(--bg-card);
-        }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(40,167,69,0.3);
+            background: rgba(255,255,255,0.05);
         }
         
         .btn-danger {
-            background: var(--danger);
+            background: #ef4444;
             color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
+            padding: 12px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 14px;
             border: none;
+            width: 100%;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(220,53,69,0.3);
+            transition: opacity 0.2s;
         }
         
-        /* Modal Styles */
+        .btn-danger:active {
+            opacity: 0.8;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-success:active {
+            opacity: 0.8;
+        }
+        
+        .btn-share {
+            background: #00B900;
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 500;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-share:active {
+            opacity: 0.8;
+        }
+        
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             z-index: 100;
             display: none;
@@ -630,178 +317,25 @@
         }
         
         .modal-content {
-            background: white;
-            border-radius: var(--radius-xl);
+            background: var(--bg-card);
+            border-radius: 24px;
             max-width: 500px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 24px;
-            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-lg);
+            padding: 20px;
+            animation: slideUp 0.3s;
         }
         
         @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
+            from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-header h3 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        
-        .modal-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .modal-close:active {
-            background: var(--border);
-        }
-        
-        /* Form Styles */
-        .input-field {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: var(--radius-md);
-            padding: 14px 16px;
-            width: 100%;
-            margin-bottom: 16px;
-            font-size: 15px;
-            transition: all 0.2s;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(6,199,85,0.1);
-        }
-        
-        .input-label {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: block;
-            color: var(--text);
-        }
-        
-        .upload-area {
-            border: 2px dashed var(--border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            text-align: center;
-            margin-bottom: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--bg-card);
-        }
-        
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-        
-        .upload-area i {
-            font-size: 32px;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        
-        /* Admin Section */
-        .admin-section {
-            background: linear-gradient(135deg, rgba(6,199,85,0.05), transparent);
-            border: 1px solid rgba(6,199,85,0.2);
-            border-radius: var(--radius-xl);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .admin-stat {
-            background: white;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-        
-        .admin-stat-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-            line-height: 1.2;
-        }
-        
-        /* User Row */
-        .user-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 8px;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .user-row:active {
-            transform: scale(0.99);
-            background: var(--bg-card);
-        }
-        
-        .user-avatar-sm {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary);
-        }
-        
-        .role-badge {
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-        
-        .role-admin {
-            background: rgba(220,53,69,0.15);
-            color: var(--danger);
-        }
-        
-        .role-editor {
-            background: rgba(255,193,7,0.15);
-            color: #b86b00;
-        }
-        
-        .role-user {
-            background: rgba(108,117,125,0.15);
-            color: var(--text-secondary);
-        }
-        
-        /* Loading */
         .loading {
             position: fixed;
             inset: 0;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.9);
             z-index: 200;
             display: none;
             align-items: center;
@@ -815,118 +349,369 @@
         .spinner {
             width: 50px;
             height: 50px;
-            border: 3px solid var(--border);
+            border: 4px solid var(--border);
             border-top-color: var(--primary);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 1s linear infinite;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 48px 20px;
+        .profile-header {
             background: var(--bg-card);
-            border-radius: var(--radius-xl);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
             border: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
         }
         
-        .empty-state i {
-            font-size: 48px;
-            color: var(--text-muted);
+        .profile-header:active {
+            background: #252930;
+        }
+        
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            border: 3px solid var(--primary);
+            object-fit: cover;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .search-box {
+            position: relative;
             margin-bottom: 16px;
         }
         
-        .empty-state p {
-            color: var(--text-secondary);
-            font-size: 16px;
+        .search-box input {
+            width: 100%;
+            padding: 12px 12px 12px 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            color: var(--text);
+            transition: border-color 0.2s;
         }
         
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         
-        .section-title {
-            font-size: 20px;
-            font-weight: 800;
-            position: relative;
-            padding-left: 12px;
-        }
-        
-        .section-title::before {
-            content: '';
+        .search-box i {
             position: absolute;
-            left: 0;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            width: 4px;
-            height: 24px;
-            background: var(--primary);
-            border-radius: 2px;
+            color: var(--text-secondary);
         }
         
-        .section-link {
-            color: var(--primary);
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        
-        /* Admin Tabs */
-        .admin-tabs {
+        .filter-container {
             display: flex;
             gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
         }
         
-        .admin-tab-btn {
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 600;
+        .filter-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 30px;
             font-size: 14px;
-            background: transparent;
+            white-space: nowrap;
+            background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.2s;
         }
         
-        .admin-tab-btn.active {
+        .filter-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
         
-        /* Pending Badge */
-        .pending-badge {
-            background: var(--warning);
-            color: #000;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 50px;
-            margin-left: 6px;
+        .input-field {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
         }
         
-        /* Responsive */
-        @media (min-width: 768px) {
-            .container {
-                max-width: 720px;
-                margin: 0 auto;
-            }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        .admin-section {
+            background: linear-gradient(135deg, rgba(6,199,85,0.1), transparent);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .admin-stat {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            background: var(--bg-card);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 12px 16px;
+            z-index: 1000;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+        
+        .profile-menu {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 16px;
+            animation: slideDown 0.2s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .profile-menu-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .profile-menu-item:hover {
+            background: #252930;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        
+        .user-row:active {
+            background: #252930;
+        }
+        
+        .user-avatar-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+        
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .role-admin {
+            background: rgba(239,68,68,0.2);
+            color: #ef4444;
+        }
+        
+        .role-editor {
+            background: rgba(245,158,11,0.2);
+            color: #f59e0b;
+        }
+        
+        .role-user {
+            background: rgba(107,114,128,0.2);
+            color: #9ca3af;
+        }
+        
+        .admin-tab-btn {
+            padding: 12px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .admin-tab-btn.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-card) 25%, #252930 50%, var(--bg-card) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+        
+        .share-button {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+        
+        .share-button:active {
+            background: rgba(0,0,0,0.8);
+        }
+        
+        .share-button i {
+            font-size: 18px;
+        }
+
+        .mark-read-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        
+        .mark-read-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-card);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
         }
     </style>
 </head>
-<body class="container">
+<body>
     <!-- Loading -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
@@ -945,11 +730,11 @@
             <div class="profile-header" id="profile-header">
                 <img id="profile-avatar" src="" alt="avatar" class="profile-avatar" loading="lazy">
                 <div class="flex-1">
-                    <h2 id="profile-name" class="profile-name">กำลังโหลด...</h2>
-                    <p id="profile-email" class="profile-email"></p>
-                    <span id="profile-role" class="profile-badge"></span>
+                    <h2 id="profile-name" class="text-lg font-bold">กำลังโหลด...</h2>
+                    <p id="profile-email" class="text-sm text-gray-400"></p>
+                    <p id="profile-role" class="text-xs text-[#06c755] mt-1"></p>
                 </div>
-                <i class="fas fa-chevron-down text-gray-400"></i>
+                <i class="fas fa-chevron-down text-gray-400" id="profile-chevron"></i>
             </div>
             
             <!-- Profile Menu -->
@@ -963,26 +748,23 @@
             </div>
 
             <!-- Stats -->
-            <div class="stats-grid">
+            <div class="grid grid-cols-3 gap-2 mb-4">
                 <div class="stat-card">
-                    <div class="stat-icon">📰</div>
-                    <div class="stat-label">ข่าวสาร</div>
-                    <div class="stat-value" id="stat-news">-</div>
+                    <p class="text-xs text-gray-400">ข่าวสาร</p>
+                    <p id="stat-news" class="text-xl font-bold">-</p>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🎉</div>
-                    <div class="stat-label">กิจกรรม</div>
-                    <div class="stat-value" id="stat-events">-</div>
+                    <p class="text-xs text-gray-400">กิจกรรม</p>
+                    <p id="stat-events" class="text-xl font-bold">-</p>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">⚠️</div>
-                    <div class="stat-label">ด่วน</div>
-                    <div class="stat-value" id="stat-urgent">-</div>
+                    <p class="text-xs text-gray-400">ด่วน</p>
+                    <p id="stat-urgent" class="text-xl font-bold">-</p>
                 </div>
             </div>
 
-            <!-- Hero Slider -->
-            <div class="swiper hero-swiper">
+            <!-- Hero Slider (แสดงเฉพาะประกาศด่วน) -->
+            <div class="swiper hero-swiper mb-4">
                 <div class="swiper-wrapper" id="hero-slider-wrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
@@ -993,12 +775,13 @@
                 <input type="text" id="search-input" placeholder="ค้นหาข่าวสาร กิจกรรม..." autocomplete="off">
             </div>
 
-            <!-- Filter Chips -->
+            <!-- Filter -->
             <div class="filter-container">
-                <button class="filter-chip active" data-filter="all">ทั้งหมด</button>
-                <button class="filter-chip" data-filter="news">📰 ข่าวสาร</button>
-                <button class="filter-chip" data-filter="event">🎉 กิจกรรม</button>
-                <button class="filter-chip" data-filter="urgent">⚠️ ประกาศด่วน</button>
+                <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+                <button class="filter-btn" data-filter="news">📰 ข่าวสาร</button>
+                <button class="filter-btn" data-filter="event">🎉 กิจกรรม</button>
+                <button class="filter-btn" data-filter="urgent">⚠️ ประกาศด่วน</button>
+                <button class="filter-btn" data-filter="pending">⏳ รออนุมัติ</button>
             </div>
 
             <!-- Posts List -->
@@ -1014,10 +797,10 @@
 
         <!-- Tab: My Posts -->
         <div id="tab-my" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">โพสต์ของฉัน</h2>
-                <button id="create-post-btn" class="bg-[#06c755] text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md" onclick="showCreatePostModal()">
-                    <i class="fas fa-plus mr-1"></i>สร้างโพสต์
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">โพสต์ของฉัน</h2>
+                <button id="create-post-btn" class="bg-[#06c755] text-white px-4 py-2 rounded-xl text-sm" onclick="showCreatePostModal()">
+                    <i class="fas fa-plus mr-1"></i>สร้าง
                 </button>
             </div>
             <div id="my-posts-list" class="space-y-3"></div>
@@ -1025,45 +808,53 @@
 
         <!-- Tab: Admin -->
         <div id="tab-admin" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">จัดการระบบ</h2>
-                <button id="refresh-admin" class="text-[#06c755] text-sm font-semibold">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">จัดการระบบ</h2>
+                <button id="refresh-admin" class="text-[#06c755] text-sm">
                     <i class="fas fa-sync-alt mr-1"></i>รีเฟรช
                 </button>
             </div>
 
             <!-- Admin Stats -->
             <div class="admin-section">
-                <h3 class="font-semibold mb-3 text-lg">สถิติระบบ</h3>
+                <h3 class="font-semibold mb-3">สถิติ</h3>
                 <div class="grid grid-cols-2 gap-3">
                     <div class="admin-stat">
-                        <div class="admin-stat-value" id="admin-users">-</div>
-                        <div class="text-xs text-gray-500 mt-1">ผู้ใช้ทั้งหมด</div>
+                        <p class="text-xs text-gray-400">ผู้ใช้</p>
+                        <p id="admin-users" class="text-xl font-bold">-</p>
                     </div>
                     <div class="admin-stat">
-                        <div class="admin-stat-value" id="admin-posts">-</div>
-                        <div class="text-xs text-gray-500 mt-1">โพสต์ทั้งหมด</div>
+                        <p class="text-xs text-gray-400">โพสต์</p>
+                        <p id="admin-posts" class="text-xl font-bold">-</p>
                     </div>
                     <div class="admin-stat">
-                        <div class="admin-stat-value" id="admin-today">-</div>
-                        <div class="text-xs text-gray-500 mt-1">วันนี้</div>
+                        <p class="text-xs text-gray-400">วันนี้</p>
+                        <p id="admin-today" class="text-xl font-bold">-</p>
                     </div>
                     <div class="admin-stat">
-                        <div class="admin-stat-value text-yellow-500" id="admin-pending">-</div>
-                        <div class="text-xs text-gray-500 mt-1">รออนุมัติ</div>
+                        <p class="text-xs text-gray-400">รออนุมัติ</p>
+                        <p id="admin-pending" class="text-xl font-bold text-yellow-500">-</p>
                     </div>
                 </div>
             </div>
 
             <!-- Admin Tabs -->
-            <div class="admin-tabs">
-                <button class="admin-tab-btn active" data-admin-tab="posts">จัดการโพสต์</button>
-                <button class="admin-tab-btn" data-admin-tab="pending">
-                    รออนุมัติ
-                    <span id="pending-badge" class="pending-badge hidden">0</span>
+            <div class="flex border-b border-[#2a2e36] mb-4">
+                <button class="admin-tab-btn flex-1 py-2 text-center active" data-admin-tab="posts">
+                    จัดการโพสต์
                 </button>
-                <button class="admin-tab-btn" data-admin-tab="users">จัดการผู้ใช้</button>
-                <button class="admin-tab-btn" data-admin-tab="settings">ตั้งค่า</button>
+                <button class="admin-tab-btn flex-1 py-2 text-center" data-admin-tab="pending">
+                    <span class="relative">
+                        รออนุมัติ
+                        <span id="pending-badge" class="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                    </span>
+                </button>
+                <button class="admin-tab-btn flex-1 py-2 text-center" data-admin-tab="users">
+                    จัดการผู้ใช้
+                </button>
+                <button class="admin-tab-btn flex-1 py-2 text-center" data-admin-tab="settings">
+                    ตั้งค่า
+                </button>
             </div>
 
             <!-- Admin: Posts Management -->
@@ -1074,7 +865,7 @@
                 <div id="admin-posts-list" class="space-y-2"></div>
             </div>
 
-            <!-- Admin: Pending Posts -->
+            <!-- Admin: Pending Posts (ที่เดียวที่มีปุ่มอนุมัติ/ปฏิเสธ) -->
             <div id="admin-pending-tab" class="admin-tab hidden">
                 <h3 class="font-semibold mb-3">โพสต์ที่รออนุมัติ</h3>
                 <div id="pending-posts-list" class="space-y-3"></div>
@@ -1094,27 +885,27 @@
                 <div class="admin-section">
                     <h3 class="font-semibold mb-3">ตั้งค่าระบบ</h3>
                     <form id="settings-form" onsubmit="saveSettings(event)">
-                        <label class="input-label">ชื่อระบบ</label>
+                        <label class="block text-sm text-gray-400 mb-1">ชื่อระบบ</label>
                         <input type="text" id="setting-app-name" class="input-field" required>
                         
-                        <label class="input-label">Google Drive Folder ID</label>
+                        <label class="block text-sm text-gray-400 mb-1">Google Drive Folder ID</label>
                         <input type="text" id="setting-drive-folder" class="input-field" required>
                         
                         <div class="mb-4">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="setting-require-approval" class="w-4 h-4 accent-[#06c755]">
-                                <span class="text-sm text-gray-600">ต้องอนุมัติโพสต์ก่อนเผยแพร่</span>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="setting-require-approval" class="w-4 h-4">
+                                <span class="text-sm text-gray-400">ต้องอนุมัติโพสต์ก่อนเผยแพร่</span>
                             </label>
                         </div>
                         
-                        <button type="submit" class="btn-primary">บันทึกการตั้งค่า</button>
+                        <button type="submit" class="btn-primary">บันทึก</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation (3 Tabs: Home, My Posts, Admin) -->
     <div class="bottom-nav">
         <div class="nav-item active" data-tab="home">
             <i class="fas fa-home"></i>
@@ -1130,14 +921,12 @@
         </div>
     </div>
 
-    <!-- Post Detail Modal -->
+    <!-- Post Detail Modal (ไม่มีปุ่มอนุมัติ/ปฏิเสธแล้ว) -->
     <div class="modal" id="post-modal">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="flex justify-between items-center mb-4">
                 <h3 id="modal-title" class="text-xl font-bold"></h3>
-                <button class="modal-close" onclick="closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button onclick="closeModal()"><i class="fas fa-times text-gray-400 text-xl"></i></button>
             </div>
             <div id="modal-body" class="space-y-4"></div>
             <div class="flex gap-2 mt-4">
@@ -1146,8 +935,8 @@
                 </button>
                 <button class="btn-outline flex-1" onclick="closeModal()">ปิด</button>
             </div>
-            <div id="modal-admin-controls" class="hidden mt-4 pt-4 border-t border-gray-200">
-                <p class="text-sm text-gray-500 mb-2">จัดการโพสต์</p>
+            <div id="modal-admin-controls" class="hidden mt-4 pt-4 border-t border-[#2a2e36]">
+                <p class="text-sm text-gray-400 mb-2">จัดการโพสต์</p>
                 <div class="flex gap-2">
                     <button id="modal-edit-btn" class="btn-outline flex-1 text-sm" onclick="editCurrentPost()">
                         <i class="fas fa-edit mr-2"></i>แก้ไข
@@ -1163,43 +952,36 @@
     <!-- Create/Edit Post Modal -->
     <div class="modal" id="create-modal">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="flex justify-between items-center mb-4">
                 <h3 id="create-modal-title" class="text-xl font-bold">สร้างโพสต์ใหม่</h3>
-                <button class="modal-close" onclick="closeCreateModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button onclick="closeCreateModal()"><i class="fas fa-times text-gray-400 text-xl"></i></button>
             </div>
             <form id="post-form" onsubmit="savePost(event)">
                 <input type="hidden" id="edit-post-id">
                 
-                <label class="input-label">ประเภท</label>
                 <select id="post-type" class="input-field" required>
                     <option value="news">📰 ข่าวสาร</option>
                     <option value="event">🎉 กิจกรรม</option>
                     <option value="urgent">⚠️ ประกาศด่วน</option>
                 </select>
                 
-                <label class="input-label">หัวข้อ</label>
-                <input type="text" id="post-title" placeholder="เช่น เปิดรับสมัครพนักงานใหม่" class="input-field" required maxlength="100">
+                <input type="text" id="post-title" placeholder="หัวข้อ" class="input-field" required maxlength="100">
                 
-                <label class="input-label">เนื้อหา</label>
-                <textarea id="post-content" placeholder="รายละเอียด..." class="input-field" rows="5" required maxlength="5000"></textarea>
+                <textarea id="post-content" placeholder="เนื้อหา" class="input-field" rows="5" required maxlength="5000"></textarea>
                 
                 <!-- Image Upload -->
-                <label class="input-label">รูปภาพ</label>
                 <div class="upload-area" onclick="document.getElementById('post-image-file').click()">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p class="text-sm text-gray-500">คลิกเพื่ออัปโหลดรูปภาพ</p>
-                    <p class="text-xs text-gray-400 mt-1">รองรับ JPG, PNG, GIF (สูงสุด 5MB)</p>
+                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                    <p class="text-sm text-gray-400">คลิกเพื่ออัปโหลดรูปภาพ</p>
+                    <p class="text-xs text-gray-500 mt-1">รองรับ JPG, PNG, GIF (สูงสุด 5MB)</p>
                 </div>
                 <input type="file" id="post-image-file" accept="image/*" style="display: none" onchange="previewImage(this)">
                 <img id="image-preview" class="image-preview" src="" loading="lazy">
                 <input type="hidden" id="post-image" value="">
                 
-                <label class="input-label">ลิงก์เพิ่มเติม</label>
-                <input type="text" id="post-link" placeholder="https://..." class="input-field">
+                <input type="text" id="post-link" placeholder="ลิงก์เพิ่มเติม (ถ้ามี)" class="input-field">
                 
-                <div class="flex gap-2 mt-4">
+                <div class="flex gap-2">
                     <button type="submit" class="btn-primary">บันทึก</button>
                     <button type="button" class="btn-outline" onclick="closeCreateModal()">ยกเลิก</button>
                 </div>
@@ -1210,20 +992,15 @@
     <!-- Profile Settings Modal -->
     <div class="modal" id="profile-modal">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold">แก้ไขโปรไฟล์</h3>
-                <button class="modal-close" onclick="closeProfileModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button onclick="closeProfileModal()"><i class="fas fa-times text-gray-400 text-xl"></i></button>
             </div>
             <form id="profile-form" onsubmit="saveProfile(event)">
-                <label class="input-label">เบอร์โทรศัพท์</label>
-                <input type="text" id="profile-phone" placeholder="เช่น 0812345678" class="input-field" maxlength="10">
+                <input type="text" id="profile-phone" placeholder="เบอร์โทรศัพท์" class="input-field" maxlength="10">
+                <input type="text" id="profile-department" placeholder="แผนก/หน่วยงาน" class="input-field" maxlength="50">
                 
-                <label class="input-label">แผนก/หน่วยงาน</label>
-                <input type="text" id="profile-department" placeholder="เช่น ฝ่ายพัฒนาธุรกิจ" class="input-field" maxlength="50">
-                
-                <div class="flex gap-2 mt-4">
+                <div class="flex gap-2">
                     <button type="submit" class="btn-primary">บันทึก</button>
                     <button type="button" class="btn-outline" onclick="closeProfileModal()">ยกเลิก</button>
                 </div>
@@ -1234,24 +1011,21 @@
     <!-- User Role Modal -->
     <div class="modal" id="role-modal">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold">จัดการสิทธิ์ผู้ใช้</h3>
-                <button class="modal-close" onclick="closeRoleModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button onclick="closeRoleModal()"><i class="fas fa-times text-gray-400 text-xl"></i></button>
             </div>
             <form id="role-form" onsubmit="saveUserRole(event)">
                 <input type="hidden" id="role-user-id">
-                <p id="role-user-name" class="text-gray-800 font-medium mb-4"></p>
+                <p id="role-user-name" class="text-white mb-4"></p>
                 
-                <label class="input-label">เลือกสิทธิ์</label>
                 <select id="user-role" class="input-field">
-                    <option value="user">👤 ผู้ใช้ทั่วไป (อ่านได้อย่างเดียว)</option>
+                    <option value="user">👤 ผู้ใช้ทั่วไป</option>
                     <option value="editor">✏️ ผู้เขียน (สร้างโพสต์ได้)</option>
-                    <option value="admin">👑 ผู้ดูแลระบบ (จัดการทุกอย่าง)</option>
+                    <option value="admin">👑 ผู้ดูแลระบบ</option>
                 </select>
                 
-                <div class="flex gap-2 mt-4">
+                <div class="flex gap-2">
                     <button type="submit" class="btn-primary">บันทึก</button>
                     <button type="button" class="btn-outline" onclick="closeRoleModal()">ยกเลิก</button>
                 </div>
@@ -1268,8 +1042,7 @@
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwSz6Y_fpvB0qN52eS6QD2RFJD-bJA369B6b86W1ZGVCOrbPXGGbpBIS3hDO8h6awKzkw/exec',
             LIFF_ID: '2008904120-T7I0VPZf',
             PAGE_SIZE: 20,
-            DRIVE_FOLDER_ID: '18V_3SzGvCIfwbRqIpIEwRSVdA88T8mcE',
-            AUTO_REFRESH_INTERVAL: 30000
+            DRIVE_FOLDER_ID: '18V_3SzGvCIfwbRqIpIEwRSVdA88T8mcE'
         };
 
         // ========== STATE ==========
@@ -1288,9 +1061,7 @@
             settings: {
                 requireApproval: false
             },
-            isLoading: false,
-            refreshTimer: null,
-            activeTab: 'home'
+            isLoading: false
         };
 
         // ========== DOM Elements ==========
@@ -1311,7 +1082,7 @@
 
         function showToast(msg, type = 'success') {
             toastMessage.textContent = msg;
-            toast.style.borderLeftColor = type === 'success' ? '#06c755' : '#dc3545';
+            toast.style.borderLeftColor = type === 'success' ? '#06c755' : '#ef4444';
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
@@ -1331,34 +1102,6 @@
             return d.toLocaleDateString('th-TH', { 
                 year: 'numeric', month: 'short', day: 'numeric'
             });
-        }
-
-        // ========== AUTO REFRESH ==========
-        function startAutoRefresh() {
-            if (state.refreshTimer) {
-                clearInterval(state.refreshTimer);
-            }
-            
-            state.refreshTimer = setInterval(async () => {
-                if (state.activeTab === 'home') {
-                    await loadPosts(true);
-                } else if (state.activeTab === 'my') {
-                    await loadMyPosts(true);
-                } else if (state.activeTab === 'admin' && state.isAdmin) {
-                    await Promise.all([
-                        loadAdminStats(true),
-                        loadPendingPosts(true),
-                        loadUsers(true)
-                    ]);
-                }
-            }, CONFIG.AUTO_REFRESH_INTERVAL);
-        }
-
-        function stopAutoRefresh() {
-            if (state.refreshTimer) {
-                clearInterval(state.refreshTimer);
-                state.refreshTimer = null;
-            }
         }
 
         // ========== API CALL ==========
@@ -1487,7 +1230,6 @@
                     ]);
                     
                     updateUI();
-                    startAutoRefresh();
                 } else {
                     showToast(result.message, 'error');
                 }
@@ -1540,9 +1282,7 @@
         }
 
         // ========== POSTS ==========
-        async function loadPosts(silent = false) {
-            if (!silent) showLoading();
-            
+        async function loadPosts() {
             const result = await callGAS('posts', {
                 page: state.currentPage,
                 filter: state.currentFilter,
@@ -1561,15 +1301,14 @@
                 renderHeroSlider();
                 renderPosts();
             }
-            
-            if (!silent) hideLoading();
         }
 
-        // ========== RENDER HERO SLIDER ==========
+        // ========== RENDER HERO SLIDER (เฉพาะประกาศด่วน) ==========
         function renderHeroSlider() {
             const wrapper = document.getElementById('hero-slider-wrapper');
             if (!wrapper) return;
             
+            // กรองเอาเฉพาะโพสต์ประเภท 'urgent' ที่เผยแพร่แล้ว (approvalStatus = 'approved')
             const urgentPosts = state.posts
                 .filter(post => post.type === 'urgent' && post.approvalStatus === 'approved')
                 .slice(0, 5);
@@ -1580,27 +1319,25 @@
             }
 
             wrapper.innerHTML = urgentPosts.map(post => {
-                const categoryText = 'ประกาศด่วน';
-                const categoryClass = 'urgent';
+                const typeText = '⚠️ ประกาศด่วน';
+                const badgeClass = 'urgent';
                 
                 return `
                     <div class="swiper-slide cursor-pointer" onclick="showPostDetail('${post.postId}')">
-                        <img src="${post.imageUrl || 'https://via.placeholder.com/800x400/06c755/ffffff?text=URGENT'}" 
+                        <img src="${post.imageUrl || 'https://via.placeholder.com/400/2a2e36/ffffff?text=URGENT'}" 
                              class="w-full h-full object-cover" 
                              loading="lazy"
-                             onerror="this.src='https://via.placeholder.com/800x400/06c755/ffffff?text=URGENT'">
+                             onerror="this.src='https://via.placeholder.com/400/2a2e36/ffffff?text=URGENT'">
+                        <span class="slide-badge ${badgeClass}">${typeText}</span>
                         <div class="slide-content">
-                            <span class="slide-category" style="background: ${categoryClass === 'urgent' ? '#dc3545' : '#06c755'}">${categoryText}</span>
-                            <h3 class="slide-title">${post.title}</h3>
-                            <div class="slide-meta">
-                                <i class="far fa-clock"></i>
-                                <span>${formatDateShort(post.createdAt)}</span>
-                            </div>
+                            <h3 class="font-bold text-lg line-clamp-2">${post.title}</h3>
+                            <p class="text-xs text-gray-300 mt-1">${formatDateShort(post.createdAt)}</p>
                         </div>
                     </div>
                 `;
             }).join('');
 
+            // Initialize Swiper
             const swiperEl = document.querySelector('.hero-swiper');
             if (swiperEl.swiper) {
                 swiperEl.swiper.destroy(true, true);
@@ -1608,7 +1345,7 @@
             
             new Swiper('.hero-swiper', {
                 autoplay: {
-                    delay: 4000,
+                    delay: 3000,
                     disableOnInteraction: false,
                 },
                 pagination: {
@@ -1616,13 +1353,14 @@
                     clickable: true,
                 },
                 loop: urgentPosts.length > 1,
-                speed: 600,
+                speed: 500,
             });
         }
 
         function renderPosts() {
             const list = document.getElementById('posts-list');
             
+            // กรองตามสถานะ - ผู้ใช้ทั่วไปเห็นเฉพาะ approved, admin เห็นหมด
             let filteredPosts = state.posts;
             if (!state.isAdmin) {
                 filteredPosts = state.posts.filter(p => p.approvalStatus === 'approved');
@@ -1631,8 +1369,8 @@
             if (filteredPosts.length === 0) {
                 list.innerHTML = `
                     <div class="empty-state">
-                        <i class="far fa-newspaper"></i>
-                        <p class="text-gray-500">ไม่มีโพสต์</p>
+                        <i class="fas fa-newspaper text-4xl text-gray-500 mb-3"></i>
+                        <p class="text-gray-400">ไม่มีโพสต์</p>
                     </div>
                 `;
                 return;
@@ -1640,10 +1378,10 @@
 
             list.innerHTML = filteredPosts.map(post => {
                 const typeClass = {
-                    'news': 'news',
-                    'event': 'event',
-                    'urgent': 'urgent'
-                }[post.type] || 'news';
+                    'news': 'badge-news',
+                    'event': 'badge-event',
+                    'urgent': 'badge-urgent'
+                }[post.type] || 'badge-news';
                 
                 const typeText = {
                     'news': '📰 ข่าวสาร',
@@ -1651,38 +1389,37 @@
                     'urgent': '⚠️ ประกาศด่วน'
                 }[post.type] || post.type;
                 
+                const statusBadge = post.approvalStatus !== 'approved' ? 
+                    `<span class="badge badge-pending ml-2">⏳ รออนุมัติ</span>` : '';
+                
                 const statusText = post.approvalStatus === 'approved' ? 'เผยแพร่' : 
                                   post.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
                 
-                const statusClass = post.approvalStatus === 'approved' ? 'status-approved' : 
-                                   post.approvalStatus === 'pending' ? 'status-pending' : 'status-rejected';
-                
                 return `
-                    <div class="news-card" onclick="showPostDetail('${post.postId}')">
-                        <div class="news-image-wrapper">
-                            ${post.imageUrl ? `
-                                <img src="${post.imageUrl}" class="news-image" loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/400x200/e9ecef/6c757d?text=NO+IMAGE'">
-                            ` : `
-                                <img src="https://via.placeholder.com/400x200/e9ecef/6c757d?text=NO+IMAGE" class="news-image">
-                            `}
-                            <span class="news-category ${typeClass}">${typeText}</span>
-                            <button class="share-button" onclick="event.stopPropagation(); sharePost('${post.postId}')">
-                                <i class="fab fa-line"></i>
-                            </button>
-                        </div>
+                    <div class="news-card relative" onclick="showPostDetail('${post.postId}')">
+                        <button class="share-button" onclick="event.stopPropagation(); sharePost('${post.postId}')">
+                            <i class="fab fa-line"></i>
+                        </button>
+                        ${post.imageUrl ? `
+                            <img src="${post.imageUrl}" 
+                                 class="news-image" 
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/400/2a2e36/ffffff?text=IMAGE'">
+                        ` : ''}
                         <div class="news-content">
-                            <h3 class="news-title">${post.title}</h3>
-                            <p class="news-excerpt">${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}</p>
-                            <div class="news-meta">
-                                <div class="news-author">
-                                    <i class="fas fa-user-circle"></i>
-                                    <span>${post.authorName || 'ผู้ดูแล'}</span>
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="badge ${typeClass}">${typeText}</span>
+                                    ${statusBadge}
                                 </div>
-                                <div class="news-stats">
-                                    <span><i class="far fa-eye"></i> ${post.viewCount || 0}</span>
-                                    ${state.isAdmin ? `<span class="status-badge ${statusClass}">${statusText}</span>` : ''}
-                                </div>
+                                <span class="text-xs text-gray-500">${formatDateShort(post.createdAt)}</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2">${post.title}</h3>
+                            <p class="text-sm text-gray-400 line-clamp-2">${post.content}</p>
+                            <div class="flex items-center justify-between mt-3 text-xs text-gray-500">
+                                <span><i class="fas fa-user mr-1"></i> ${post.authorName || 'ผู้ดูแล'}</span>
+                                <span><i class="fas fa-eye mr-1"></i> ${post.viewCount || 0}</span>
+                                ${state.isAdmin ? `<span class="text-${post.approvalStatus === 'approved' ? 'green-500' : post.approvalStatus === 'pending' ? 'yellow-500' : 'red-500'}">${statusText}</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1691,10 +1428,8 @@
         }
 
         // ========== PENDING POSTS ==========
-        async function loadPendingPosts(silent = false) {
+        async function loadPendingPosts() {
             if (!state.isAdmin) return;
-            
-            if (!silent) showLoading();
             
             const result = await callGAS('admin/posts/pending');
             if (result.success) {
@@ -1710,8 +1445,6 @@
                     badge.classList.add('hidden');
                 }
             }
-            
-            if (!silent) hideLoading();
         }
 
         function renderPendingPosts() {
@@ -1719,8 +1452,8 @@
             if (state.pendingPosts.length === 0) {
                 list.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-check-circle"></i>
-                        <p class="text-gray-500">ไม่มีโพสต์รออนุมัติ</p>
+                        <i class="fas fa-check-circle text-4xl text-gray-500 mb-3"></i>
+                        <p class="text-gray-400">ไม่มีโพสต์รออนุมัติ</p>
                     </div>
                 `;
                 return;
@@ -1734,20 +1467,18 @@
                 }[post.type] || '📄';
                 
                 return `
-                    <div class="bg-white p-5 rounded-xl border border-yellow-200 shadow-sm">
+                    <div class="bg-[#1a1d24] p-4 rounded-xl border border-yellow-500/30">
                         <div class="flex justify-between items-start mb-3">
-                            <div class="flex gap-2">
-                                <span class="status-badge status-pending">⏳ รออนุมัติ</span>
-                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">${typeIcon} ${post.type === 'news' ? 'ข่าวสาร' : post.type === 'event' ? 'กิจกรรม' : 'ประกาศด่วน'}</span>
+                            <div>
+                                <span class="badge badge-pending">⏳ รออนุมัติ</span>
+                                <span class="badge badge-${post.type} ml-2">${typeIcon}</span>
                             </div>
-                            <span class="text-xs text-gray-400">${formatDateShort(post.createdAt)}</span>
+                            <span class="text-xs text-gray-500">${formatDateShort(post.createdAt)}</span>
                         </div>
-                        <h3 class="font-bold text-lg mb-2">${post.title}</h3>
-                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">${post.content}</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">
-                                <i class="fas fa-user mr-1"></i> ${post.authorName || 'ผู้ใช้'}
-                            </span>
+                        <h3 class="font-semibold text-lg mb-2">${post.title}</h3>
+                        <p class="text-sm text-gray-400 mb-3 line-clamp-2">${post.content}</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">โดย: ${post.authorName || 'ผู้ใช้'}</span>
                             <div class="flex gap-2">
                                 <button class="btn-success text-sm py-2 px-4" onclick="approvePost('${post.postId}')">
                                     <i class="fas fa-check mr-1"></i>อนุมัติ
@@ -1762,7 +1493,7 @@
             }).join('');
         }
 
-        // ========== APPROVE/REJECT POST ==========
+        // ========== APPROVE/REJECT POST (เฉพาะใน Tab รออนุมัติ) ==========
         async function approvePost(postId) {
             if (!state.isAdmin) return;
             
@@ -1785,16 +1516,42 @@
                     title: 'อนุมัติสำเร็จ',
                     text: 'โพสต์ได้รับการอนุมัติและเผยแพร่แล้ว',
                     icon: 'success',
-                    confirmButtonColor: '#06c755',
-                    timer: 1500
+                    confirmButtonColor: '#06c755'
                 });
                 
-                await Promise.all([
-                    loadPosts(true),
-                    loadPendingPosts(true),
-                    loadMyPosts(true),
-                    loadAdminStats(true)
-                ]);
+                // ลบออกจาก pending และเพิ่มเข้า posts
+                const approvedPost = state.pendingPosts.find(p => p.postId === postId);
+                if (approvedPost) {
+                    approvedPost.approvalStatus = 'approved';
+                    
+                    // ลบจาก pending
+                    state.pendingPosts = state.pendingPosts.filter(p => p.postId !== postId);
+                    
+                    // เพิ่มหรืออัปเดตใน posts
+                    const postIndex = state.posts.findIndex(p => p.postId === postId);
+                    if (postIndex !== -1) {
+                        state.posts[postIndex] = approvedPost;
+                    } else {
+                        state.posts.unshift(approvedPost);
+                    }
+                }
+                
+                // อัปเดต UI ทันที
+                renderPendingPosts();
+                renderPosts();
+                renderHeroSlider();
+                
+                // อัปเดต badge
+                const badge = document.getElementById('pending-badge');
+                if (state.pendingPosts.length > 0) {
+                    badge.textContent = state.pendingPosts.length > 9 ? '9+' : state.pendingPosts.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+                
+                // อัปเดตสถิติ
+                await loadAdminStats();
             }
         }
 
@@ -1806,7 +1563,7 @@
                 text: 'คุณต้องการปฏิเสธโพสต์นี้ใช่หรือไม่?',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#dc3545',
+                confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'ใช่, ปฏิเสธ',
                 cancelButtonText: 'ยกเลิก'
@@ -1820,30 +1577,39 @@
                     title: 'ปฏิเสธสำเร็จ',
                     text: 'โพสต์ถูกปฏิเสธเรียบร้อย',
                     icon: 'success',
-                    confirmButtonColor: '#06c755',
-                    timer: 1500
+                    confirmButtonColor: '#06c755'
                 });
                 
-                await Promise.all([
-                    loadPosts(true),
-                    loadPendingPosts(true),
-                    loadMyPosts(true),
-                    loadAdminStats(true)
-                ]);
+                // ลบออกจาก pending และ posts
+                state.pendingPosts = state.pendingPosts.filter(p => p.postId !== postId);
+                state.posts = state.posts.filter(p => p.postId !== postId);
+                
+                // อัปเดต UI ทันที
+                renderPendingPosts();
+                renderPosts();
+                renderHeroSlider();
+                
+                // อัปเดต badge
+                const badge = document.getElementById('pending-badge');
+                if (state.pendingPosts.length > 0) {
+                    badge.textContent = state.pendingPosts.length > 9 ? '9+' : state.pendingPosts.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+                
+                // อัปเดตสถิติ
+                await loadAdminStats();
             }
         }
 
         // ========== MY POSTS ==========
-        async function loadMyPosts(silent = false) {
-            if (!silent) showLoading();
-            
+        async function loadMyPosts() {
             const result = await callGAS('user/posts');
             if (result.success) {
                 state.myPosts = result.data || [];
                 renderMyPosts();
             }
-            
-            if (!silent) hideLoading();
         }
 
         function renderMyPosts() {
@@ -1851,10 +1617,10 @@
             if (state.myPosts.length === 0) {
                 list.innerHTML = `
                     <div class="empty-state">
-                        <i class="far fa-edit"></i>
-                        <p class="text-gray-500">ยังไม่มีโพสต์</p>
+                        <i class="fas fa-pen-fancy text-4xl text-gray-500 mb-3"></i>
+                        <p class="text-gray-400">ยังไม่มีโพสต์</p>
                         ${state.isEditor ? `
-                            <button class="btn-primary mt-4 w-auto px-6" onclick="showCreatePostModal()">
+                            <button class="btn-primary mt-4" onclick="showCreatePostModal()">
                                 <i class="fas fa-plus mr-2"></i>สร้างโพสต์แรก
                             </button>
                         ` : ''}
@@ -1864,8 +1630,8 @@
             }
 
             list.innerHTML = state.myPosts.map(post => {
-                const statusClass = post.approvalStatus === 'approved' ? 'status-approved' : 
-                                   post.approvalStatus === 'pending' ? 'status-pending' : 'status-rejected';
+                const statusClass = post.approvalStatus === 'approved' ? 'text-[#06c755]' : 
+                                   post.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500';
                 const statusText = post.approvalStatus === 'approved' ? 'เผยแพร่' : 
                                   post.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
                 
@@ -1877,16 +1643,18 @@
                 
                 return `
                     <div class="news-card" onclick="showPostDetail('${post.postId}')">
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex gap-2">
-                                    <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">${typeIcon} ${post.type === 'news' ? 'ข่าวสาร' : post.type === 'event' ? 'กิจกรรม' : 'ประกาศด่วน'}</span>
-                                    <span class="status-badge ${statusClass}">${statusText}</span>
+                        <div class="news-content">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="badge badge-news">${typeIcon}</span>
+                                    ${post.approvalStatus === 'pending' ? 
+                                        '<span class="badge badge-pending ml-2">⏳ รออนุมัติ</span>' : ''}
                                 </div>
-                                <span class="text-xs text-gray-400">${formatDateShort(post.createdAt)}</span>
+                                <span class="text-xs ${statusClass}">${statusText}</span>
                             </div>
-                            <h3 class="font-bold text-lg mb-2">${post.title}</h3>
-                            <p class="text-sm text-gray-500 line-clamp-2">${post.content}</p>
+                            <h3 class="font-semibold">${post.title}</h3>
+                            <p class="text-sm text-gray-400 mt-1 line-clamp-2">${post.content}</p>
+                            <p class="text-xs text-gray-500 mt-2">${formatDate(post.createdAt)}</p>
                         </div>
                     </div>
                 `;
@@ -2037,36 +1805,32 @@
                 const statusText = post.approvalStatus === 'approved' ? 'เผยแพร่' : 
                                   post.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
                 
-                const statusClass = post.approvalStatus === 'approved' ? 'text-green-600' : 
-                                   post.approvalStatus === 'pending' ? 'text-yellow-600' : 'text-red-600';
+                const statusClass = post.approvalStatus === 'approved' ? 'text-[#06c755]' : 
+                                   post.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500';
 
                 let html = `
                     ${post.imageUrl ? `
-                        <img src="${post.imageUrl}" class="w-full h-48 object-cover rounded-xl mb-4" loading="lazy">
+                        <img src="${post.imageUrl}" class="w-full h-48 object-cover rounded-xl" loading="lazy">
                     ` : ''}
                     
-                    <div class="flex justify-between items-center mb-3">
-                        <div class="flex gap-2">
-                            <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">${typeText}</span>
-                            <span class="status-badge ${post.approvalStatus === 'approved' ? 'status-approved' : post.approvalStatus === 'pending' ? 'status-pending' : 'status-rejected'}">${statusText}</span>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="badge badge-${post.type}">${typeText}</span>
+                            ${post.approvalStatus !== 'approved' ? 
+                                `<span class="badge badge-pending ml-2">⏳ ${statusText}</span>` : ''}
                         </div>
                         <span class="text-sm text-gray-400">
-                            <i class="far fa-eye mr-1"></i>${post.viewCount || 0}
+                            <i class="fas fa-eye mr-1"></i>${post.viewCount || 0}
                         </span>
                     </div>
                     
-                    <div class="prose prose-sm max-w-none text-gray-700 mb-4">
-                        ${post.content.split('\n').map(p => `<p class="mb-2">${p}</p>`).join('')}
-                    </div>
+                    <p class="text-gray-400 whitespace-pre-wrap">${post.content}</p>
                     
-                    <div class="text-sm text-gray-500 border-t pt-4 space-y-2">
-                        <p><i class="fas fa-user-circle mr-2"></i> ${post.authorName || 'ผู้ดูแล'}</p>
-                        <p><i class="far fa-calendar-alt mr-2"></i> ${formatDate(post.createdAt)}</p>
-                        ${post.link ? `
-                            <p><i class="fas fa-link mr-2"></i> 
-                                <a href="${post.link}" target="_blank" class="text-[#06c755] hover:underline">ลิงก์เพิ่มเติม</a>
-                            </p>
-                        ` : ''}
+                    <div class="text-sm text-gray-500 border-t border-[#2a2e36] pt-4">
+                        <p><i class="fas fa-user mr-2"></i> โพสต์โดย: ${post.authorName || 'ผู้ดูแล'}</p>
+                        <p><i class="fas fa-calendar mr-2 mt-2"></i> ${formatDate(post.createdAt)}</p>
+                        <p class="mt-1"><span class="${statusClass}">สถานะ: ${statusText}</span></p>
+                        ${post.link ? `<p><i class="fas fa-link mr-2 mt-2"></i> <a href="${post.link}" target="_blank" class="text-[#06c755]">ลิงก์เพิ่มเติม</a></p>` : ''}
                     </div>
                 `;
 
@@ -2079,6 +1843,9 @@
                 
                 if (canEdit || canDelete) {
                     adminControls.classList.remove('hidden');
+                    
+                    const editDeleteDiv = document.getElementById('modal-edit-btn').parentNode;
+                    editDeleteDiv.classList.remove('hidden');
                     document.getElementById('modal-edit-btn').style.display = canEdit ? 'block' : 'none';
                     document.getElementById('modal-delete-btn').style.display = canDelete ? 'block' : 'none';
                 } else {
@@ -2175,8 +1942,7 @@
                         title: 'ส่งขออนุมัติแล้ว',
                         text: 'โพสต์ของคุณถูกส่งให้ผู้ดูแลตรวจสอบแล้ว',
                         icon: 'success',
-                        confirmButtonColor: '#06c755',
-                        timer: 1500
+                        confirmButtonColor: '#06c755'
                     });
                 } else {
                     showToast(isEdit ? 'แก้ไขสำเร็จ' : 'สร้างสำเร็จ');
@@ -2184,11 +1950,12 @@
                 
                 closeCreateModal();
                 
+                // โหลดข้อมูลใหม่
                 await Promise.all([
-                    loadPosts(true),
-                    loadMyPosts(true),
-                    loadPendingPosts(true),
-                    state.isAdmin ? loadAdminStats(true) : Promise.resolve()
+                    loadPosts(),
+                    loadMyPosts(),
+                    loadPendingPosts(),
+                    state.isAdmin ? loadAdminStats() : Promise.resolve()
                 ]);
             }
         }
@@ -2232,10 +1999,10 @@
             
             const result = await Swal.fire({
                 title: 'ลบโพสต์',
-                text: 'คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์นี้?',
+                text: 'คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์นี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#dc3545',
+                confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'ใช่, ลบ',
                 cancelButtonText: 'ยกเลิก'
@@ -2252,34 +2019,48 @@
                     title: 'ลบสำเร็จ',
                     text: 'โพสต์ถูกลบเรียบร้อย',
                     icon: 'success',
-                    confirmButtonColor: '#06c755',
-                    timer: 1500
+                    confirmButtonColor: '#06c755'
                 });
                 
                 closeModal();
                 
-                await Promise.all([
-                    loadPosts(true),
-                    loadMyPosts(true),
-                    loadPendingPosts(true),
-                    state.isAdmin ? loadAdminStats(true) : Promise.resolve()
-                ]);
+                // ลบออกจาก state ทันที
+                const postId = state.currentPost.postId;
+                
+                state.myPosts = state.myPosts.filter(p => p.postId !== postId);
+                state.posts = state.posts.filter(p => p.postId !== postId);
+                state.pendingPosts = state.pendingPosts.filter(p => p.postId !== postId);
+                
+                // อัปเดต UI
+                renderMyPosts();
+                renderPosts();
+                renderHeroSlider();
+                renderPendingPosts();
+                
+                // อัปเดต badge
+                const badge = document.getElementById('pending-badge');
+                if (state.pendingPosts.length > 0) {
+                    badge.textContent = state.pendingPosts.length > 9 ? '9+' : state.pendingPosts.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+                
+                if (state.isAdmin) {
+                    await loadAdminStats();
+                }
             }
         }
 
         // ========== ADMIN: USERS ==========
-        async function loadUsers(silent = false) {
+        async function loadUsers() {
             if (!state.isAdmin) return;
-            
-            if (!silent) showLoading();
             
             const result = await callGAS('admin/users');
             if (result.success) {
                 state.users = result.data || [];
                 renderUsers();
             }
-            
-            if (!silent) hideLoading();
         }
 
         function renderUsers() {
@@ -2304,21 +2085,21 @@
                 }[user.role] || 'role-user';
                 
                 const roleText = {
-                    'admin': 'ผู้ดูแลระบบ',
+                    'admin': 'ผู้ดูแล',
                     'editor': 'ผู้เขียน',
-                    'user': 'ผู้ใช้ทั่วไป'
+                    'user': 'ผู้ใช้'
                 }[user.role] || 'ผู้ใช้';
                 
                 return `
                     <div class="user-row">
-                        <img src="${user.pictureUrl || 'https://via.placeholder.com/48'}" class="user-avatar-sm" loading="lazy">
+                        <img src="${user.pictureUrl || 'https://via.placeholder.com/40'}" class="user-avatar-sm" loading="lazy">
                         <div class="flex-1">
                             <p class="font-semibold">${user.displayName || 'ไม่ระบุชื่อ'}</p>
                             <p class="text-xs text-gray-400">${user.email || ''}</p>
                         </div>
                         <span class="role-badge ${roleClass}">${roleText}</span>
                         ${state.isAdmin ? `
-                            <button class="text-[#06c755] hover:bg-gray-100 p-2 rounded-full transition" onclick="showRoleModal('${user.lineUserId}', '${user.displayName}', '${user.role}')">
+                            <button class="text-[#06c755] text-sm" onclick="showRoleModal('${user.lineUserId}', '${user.displayName}', '${user.role}')">
                                 <i class="fas fa-cog"></i>
                             </button>
                         ` : ''}
@@ -2367,31 +2148,33 @@
                     title: 'บันทึกสำเร็จ',
                     text: 'อัปเดตสิทธิ์ผู้ใช้เรียบร้อย',
                     icon: 'success',
-                    confirmButtonColor: '#06c755',
-                    timer: 1500
+                    confirmButtonColor: '#06c755'
                 });
                 
                 closeRoleModal();
                 
-                await Promise.all([
-                    loadUsers(true),
-                    loadAdminStats(true)
-                ]);
+                // อัปเดต state ทันที
+                const userIndex = state.users.findIndex(u => u.lineUserId === userId);
+                if (userIndex !== -1) {
+                    state.users[userIndex].role = role;
+                }
                 
+                // ถ้าเป็นผู้ใช้ปัจจุบัน ให้อัปเดตด้วย
                 if (state.user?.lineUserId === userId) {
                     state.user.role = role;
                     state.isAdmin = role === 'admin';
                     state.isEditor = role === 'admin' || role === 'editor';
                     updateUI();
                 }
+                
+                renderUsers();
+                await loadUsers();
             }
         }
 
         // ========== ADMIN: STATS ==========
-        async function loadAdminStats(silent = false) {
+        async function loadAdminStats() {
             if (!state.isAdmin) return;
-            
-            if (!silent) showLoading();
             
             const result = await callGAS('admin/stats');
             if (result.success) {
@@ -2415,25 +2198,18 @@
                     const statusText = p.approvalStatus === 'approved' ? 'เผยแพร่' : 
                                       p.approvalStatus === 'pending' ? 'รออนุมัติ' : 'ปฏิเสธ';
                     
-                    const statusClass = p.approvalStatus === 'approved' ? 'text-green-600' : 
-                                       p.approvalStatus === 'pending' ? 'text-yellow-600' : 'text-red-600';
-                    
                     return `
-                        <div class="flex justify-between items-center p-4 bg-white rounded-xl border border-gray-200 cursor-pointer hover:border-[#06c755] transition" onclick="showPostDetail('${p.postId}')">
+                        <div class="flex justify-between items-center p-3 bg-[#111317] rounded-lg cursor-pointer" onclick="showPostDetail('${p.postId}')">
                             <div class="flex-1">
                                 <p class="font-semibold">${p.title}</p>
-                                <p class="text-xs text-gray-400 mt-1">${formatDateShort(p.createdAt)}</p>
+                                <p class="text-xs text-gray-400">${formatDateShort(p.createdAt)}</p>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">${typeIcon}</span>
-                                <span class="text-sm ${statusClass}">${statusText}</span>
-                            </div>
+                            <span class="badge badge-${p.type} text-xs mr-2">${typeIcon}</span>
+                            <span class="text-xs ${p.approvalStatus === 'approved' ? 'text-[#06c755]' : p.approvalStatus === 'pending' ? 'text-yellow-500' : 'text-red-500'}">${statusText}</span>
                         </div>
                     `;
                 }).join('');
             }
-            
-            if (!silent) hideLoading();
         }
 
         // ========== SETTINGS ==========
@@ -2457,8 +2233,7 @@
                     title: 'บันทึกสำเร็จ',
                     text: 'ตั้งค่าระบบถูกอัปเดตเรียบร้อย',
                     icon: 'success',
-                    confirmButtonColor: '#06c755',
-                    timer: 1500
+                    confirmButtonColor: '#06c755'
                 });
                 
                 Object.assign(state.settings, data);
@@ -2514,13 +2289,12 @@
                 text: 'คุณต้องการออกจากระบบใช่หรือไม่?',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#dc3545',
+                confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'ใช่, ออกจากระบบ',
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    stopAutoRefresh();
                     if (liff.isLoggedIn()) {
                         liff.logout();
                     }
@@ -2533,7 +2307,6 @@
         document.querySelectorAll('.nav-item').forEach(tab => {
             tab.addEventListener('click', () => {
                 const target = tab.dataset.tab;
-                state.activeTab = target;
                 
                 document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
@@ -2588,9 +2361,9 @@
         });
 
         // ========== FILTER ==========
-        document.querySelectorAll('.filter-chip').forEach(btn => {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 state.currentFilter = btn.dataset.filter;
                 state.currentPage = 1;
@@ -2599,13 +2372,11 @@
         });
 
         // ========== REFRESH ADMIN ==========
-        document.getElementById('refresh-admin')?.addEventListener('click', async () => {
+        document.getElementById('refresh-admin')?.addEventListener('click', () => {
             if (state.isAdmin) {
-                await Promise.all([
-                    loadAdminStats(true),
-                    loadUsers(true),
-                    loadPendingPosts(true)
-                ]);
+                loadAdminStats();
+                loadUsers();
+                loadPendingPosts();
             }
         });
 
@@ -2639,9 +2410,20 @@
             }
         };
 
-        // Cleanup
-        window.addEventListener('beforeunload', () => {
-            stopAutoRefresh();
+        // Lazy Loading Images
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            img.classList.add('lazy-image');
+            imageObserver.observe(img);
         });
     </script>
 </body>
